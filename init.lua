@@ -152,6 +152,7 @@ function ranks.update_nametag(name)
 	if type(name) ~= "string" then
 		name = name:get_player_name()
 	else
+        local player
 		player = minetest.get_player_by_name(name)
 	end
 
@@ -259,18 +260,18 @@ minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 
 	-- If database item exists and new storage item does not, use database item
-	if player:get_attribute("ranks:rank") ~= nil and storage:get_string(name, rank) == "" then
+	if player:get_meta():get("ranks:rank") ~= nil and storage:get_string(name, rank) == "" then
 		-- Add entry into new storage system
-		storage:set_string(name, player:get_attribute("ranks:rank"))
+		storage:set_string(name, player:get_meta():get("ranks:rank"))
 
 		-- Store backup then invalidate database item
-		player:set_attribute("ranks:rank-old", player:get_attribute("ranks:rank"))
+		player:set_attribute("ranks:rank-old", player:get_meta():get("ranks:rank"))
 		player:set_attribute("ranks:rank", nil)
 	end
 
 	-- Both items exist, remove old one
-	if player:get_attribute("ranks:rank") ~= nil and storage:get_string(name, rank) ~= "" then
-		player:set_attribute("ranks:rank-old", player:get_attribute("ranks:rank"))
+	if player:get_meta():get("ranks:rank") ~= nil and storage:get_string(name, rank) ~= "" then
+		player:set_attribute("ranks:rank-old", player:get_meta():get("ranks:rank"))
 		player:set_attribute("ranks:rank", nil)
 	end
 
