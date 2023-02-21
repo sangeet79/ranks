@@ -152,8 +152,7 @@ function ranks.update_nametag(name)
 	if type(name) ~= "string" then
 		name = name:get_player_name()
 	else
-        local player
-		player = minetest.get_player_by_name(name)
+		local player = minetest.get_player_by_name(name)
 	end
 
 	local rank = ranks.get_rank(name)
@@ -275,6 +274,16 @@ minetest.register_on_joinplayer(function(player)
 		player:set_attribute("ranks:rank", nil)
 	end
 
+	-- small Avalon patch
+    	local rank = ranks.get_rank(name)
+    	if rank == nil then
+        	ranks.set_rank(player, "player")
+        	player:set_pos({x = -3649, y = 10, z = -94})
+    	elseif ranks.get_rank(name) == "prisoner" then
+        	player:set_pos({x = -17865, y = 3, z = 20240})
+    	end
+	--
+		
 	if ranks.get_rank(name) then
 		-- Update nametag
 		ranks.update_nametag(name)
